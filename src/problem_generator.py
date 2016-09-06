@@ -13,7 +13,7 @@ def write_graph_to_file(out_file, graph):
     :param out_file: Location of the outfile
     :type out_file: str
     :param graph: The adjacency list to write
-    :type graph: list
+    :type graph: list[list[int]]
     :rtype: None
     :return: Nothing, but a file is written
     """
@@ -34,7 +34,7 @@ def read_graph_from_file(in_file):
 
     :param in_file: name of input file
     :type in_file: str
-    :rtype: graph (adjacency list)
+    :rtype: list[list[int]]
     :return: adjacency list representing graph from file
     """
     with open(in_file) as in_file:
@@ -51,8 +51,8 @@ def generate_graph(num_vert):
 
     :param num_vert: The number of vertices to have in the graph
     :type num_vert: int
-    :rtype: graph (adjacency list)
-    :return: A random planar graph
+    :rtype: list[list[int]]
+    :return: A random planar graph as an adjacency list
     """
     random_points = scatter_points(num_vert)
     return build_graph(random_points)
@@ -74,7 +74,7 @@ def build_graph(points):
              lines
 
     :param points: the points from which to generate the graph
-    :type points: list of tuple
+    :type points: list[tuple(int,int)]
     :rtype: graph (adjacency list)
     :return: a planar graph constructed from the given vertices
     """
@@ -84,13 +84,15 @@ def build_graph(points):
 def scatter_points(num_points, seed=None):
     """
     Generates a specified number of random 2d points in the rectangle from
-    (0, 0) to (1, 1)
+    (0, 0) to (1, 1).
+
+    If no seed is specified, the current time is used as the seed.
 
     :param num_points: the number of points to generate
     :type num_points: int
     :param seed: the seed for the pseudo-random number generator
-    :type num_points: int
-    :rtye: list of tuple
+    :type seed: int
+    :rtype: list[tuple(int,int)]
     :return: list of generated points
     """
     random.seed(seed)
