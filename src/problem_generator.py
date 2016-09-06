@@ -60,15 +60,18 @@ def generate_graph(num_vert):
 
 def build_graph(points):
     """
-    Generates a planar graph from a set of points by following a particular set of rules:
+    Generates a planar graph from a set of points by following a particular
+    set of rules:
     - Each point is a vertex in the graph
     - Each line connecting two points is an edge between two vertices
     - Connections are made with the following procedure:
       - Until there are no more connections that can be made between vertices:
         - Pick a random point X
-        - With a straight line, connect X to the closest point Y that has the following properties:
+        - With a straight line, connect X to the closest point Y that has the
+          following properties:
           1. X is not connected to Y
-          2. the line connecting X and Y does not cross any other existing lines
+          2. the line connecting X and Y does not cross any other existing
+             lines
 
     :param points: the points from which to generate the graph
     :type points: list of tuple
@@ -77,9 +80,11 @@ def build_graph(points):
     """
     pass
 
+
 def scatter_points(num_points, seed=None):
     """
-    Generates a specified number of random 2d points in the rectangle from (0, 0) to (1, 1)
+    Generates a specified number of random 2d points in the rectangle from
+    (0, 0) to (1, 1)
 
     :param num_points: the number of points to generate
     :type num_points: int
