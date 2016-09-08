@@ -14,7 +14,7 @@ class TestProblemGenerator(unittest.TestCase):
             self.assertEqual(type(''), type(file_path))
             self.assertEqual('problems/{}'.format(file_name), file_path)
 
-    def test_write_graph_to_file(self):
+    def test_read_and_write_graph_to_file(self):
         """
         Tests write graph to file
         """
@@ -29,18 +29,6 @@ class TestProblemGenerator(unittest.TestCase):
             self.assertIsNone(
                 problem_generator.read_graph_from_file(
                     'test{}.json'.format(index)
-                )
-            )
-
-    def test_read_graph_from_file(self):
-        """
-        Tests read graph from file
-        """
-        for i in range(3):
-            # This will need to change when generate graph is done
-            self.assertIsNone(
-                problem_generator.read_graph_from_file(
-                    'test{}.json'.format(i)
                 )
             )
 
