@@ -70,4 +70,3 @@ class TestProblemGenerator(unittest.TestCase):
                 num_point,
                 len(problem_generator.scatter_points(num_point))
             )
-
