@@ -4,6 +4,7 @@ This file will generate a random planer graph
 import os
 import random
 import sys
+import json
 
 
 def write_graph_to_file(out_file, graph):
@@ -17,15 +18,21 @@ def write_graph_to_file(out_file, graph):
     :rtype: None
     :return: Nothing, but a file is written
     """
-    out_file = os.path.join('problems', out_file)
+    out_file = generate_file_path(out_file)
     with open(out_file, 'w') as out_file:
-        out_file.writelines(
-            ' '.join(
-                map(
-                    lambda x: str(x), adjacency_list
-                )
-            ) + '\n' for adjacency_list in graph
-        )
+        json.dump(graph, out_file, encoding='utf8')
+
+
+def generate_file_path(file_name):
+    """
+    Returns the file path to problems
+
+    :param file_name: The file to create
+    :type file_name: str
+    :rtype: str
+    :return: The file path to the problem
+    """
+    return os.path.join('problems', file_name)
 
 
 def read_graph_from_file(in_file):
@@ -37,11 +44,9 @@ def read_graph_from_file(in_file):
     :rtype: list[list[int]]
     :return: adjacency list representing graph from file
     """
+    in_file = generate_file_path(in_file)
     with open(in_file) as in_file:
-        graph = [
-            map(lambda x: int(x), line[:-1].split(' ')) for line in in_file
-            ]
-
+        graph = json.load(in_file, encoding='utf8')
     return graph
 
 
