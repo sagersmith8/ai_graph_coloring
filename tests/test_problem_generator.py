@@ -4,13 +4,13 @@ from ai_graph_color import problem_generator
 
 
 class TestProblemGenerator(unittest.TestCase):
-    def test_create_file(self):
+    def test_generate_file_path(self):
         """
         Tests create file
         """
         file_names = ['test.json', '']
         for file_name in file_names:
-            file_path = problem_generator.create_file(file_name)
+            file_path = problem_generator.generate_file_path(file_name)
             self.assertEqual(type(''), type(file_path))
             self.assertEqual('problems/{}'.format(file_name), file_path)
 
@@ -20,13 +20,14 @@ class TestProblemGenerator(unittest.TestCase):
         """
         num_verts = [0, 5, 100]
         for index, num_vert in enumerate(num_verts):
+            graph = problem_generator.generate_graph(num_vert)
             problem_generator.write_graph_to_file(
                 'test{}.json'.format(index),
-                problem_generator.generate_graph(num_vert)
+                graph
             )
 
-            # This will need to change once generate graph is done
-            self.assertIsNone(
+            self.assertEqual(
+                graph,
                 problem_generator.read_graph_from_file(
                     'test{}.json'.format(index)
                 )
@@ -69,3 +70,4 @@ class TestProblemGenerator(unittest.TestCase):
                 num_point,
                 len(problem_generator.scatter_points(num_point))
             )
+
