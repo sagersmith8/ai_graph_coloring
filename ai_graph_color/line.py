@@ -10,14 +10,15 @@ class Line:
         """
         self.left_point = min(point_a, point_b)
         self.right_point = max(point_a, point_b)
-        self.distance = point_distance(point_a, point_b)
+        self.distance = Line.point_distance(point_a, point_b)
         self.deallocation_routines = []
-        
+
     def add_reference(self, deallocation_routine, *params):
         """
-        Add a deallocation routine for when resources associated with this line.
+        Add a deallocation routine for when resources associated with this line
 
-        :param deallocation_routine: the function to call to free a specific resource
+        :param deallocation_routine: the function to call to free a specific
+        resource
         :type deallocation_routine: function
         :param params: parameters to the deallocation_routine
         :type params: tuple
@@ -32,7 +33,6 @@ class Line:
 
         :return: Nothing
         """
-        
         for routine, params in self.deallocation_routines:
             routine(*params)
 
@@ -47,4 +47,5 @@ class Line:
         :rtype: float
         :return: the distance between point_a and point_b
         """
-        return ((point_a[0] - point_b[0])**2 + (point_a[1] - point_b[1])**2)**0.5
+        return ((point_a[0] - point_b[0])**2 +
+                (point_a[1] - point_b[1])**2)**0.5
