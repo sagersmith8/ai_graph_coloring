@@ -10,7 +10,7 @@ class Line:
         """
         self.left_point = min(point_a, point_b)
         self.right_point = max(point_a, point_b)
-        self.distance = Line.point_distance(point_a, point_b)
+        self.distance = point_distance(point_a, point_b)
         self.deallocation_routines = []
 
     def add_reference(self, deallocation_routine, *params):
@@ -36,16 +36,16 @@ class Line:
         for routine, params in self.deallocation_routines:
             routine(*params)
 
-    def point_distance(point_a, point_b):
-        """
-        Compute the euclidean distance between two points.
+def point_distance(point_a, point_b):
+    """
+    Compute the euclidean distance between two points.
 
-        :param point_a: one of the two points to measure distance between
-        :type point_a: tuple(float, float)
-        :param point_b: the other of the two points to measure distance between
-        :type point_b: tuple(float, float)
-        :rtype: float
-        :return: the distance between point_a and point_b
-        """
-        return ((point_a[0] - point_b[0])**2 +
-                (point_a[1] - point_b[1])**2)**0.5
+    :param point_a: one of the two points to measure distance between
+    :type point_a: tuple(float, float)
+    :param point_b: the other of the two points to measure distance between
+    :type point_b: tuple(float, float)
+    :rtype: float
+    :return: the distance between point_a and point_b
+    """
+    return ((point_a[0] - point_b[0])**2 +
+            (point_a[1] - point_b[1])**2)**0.5
