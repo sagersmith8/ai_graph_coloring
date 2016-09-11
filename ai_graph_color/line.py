@@ -48,5 +48,5 @@ def point_distance(point_a, point_b):
     :rtype: float
     :return: the distance between point_a and point_b
     """
-    return ((point_a[0] - point_b[0])**2 +
-            (point_a[1] - point_b[1])**2)**0.5
+    return ((point_a[0] - point_b[0]) ** 2 +
+            (point_a[1] - point_b[1]) ** 2) ** 0.5
