@@ -18,7 +18,7 @@ class Line:
         Add a deallocation routine for when resources associated with this line
 
         :param deallocation_routine: the function to call to free a specific
-        resource
+            resource
         :type deallocation_routine: function
         :param params: parameters to the deallocation_routine
         :type params: tuple
