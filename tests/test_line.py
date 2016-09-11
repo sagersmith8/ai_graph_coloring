@@ -5,7 +5,7 @@ from ai_graph_color.line import Line, point_distance
 class TestLineObject(unittest.TestCase):
     def test_init_unequal_x(self):
         """
-        Tests making a line with unequal x values
+        Tests making a line with the same y and different x's
         """
         left_point = (0, 0)
         right_point = (10, 0)
