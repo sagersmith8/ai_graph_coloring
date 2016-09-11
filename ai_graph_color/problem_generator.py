@@ -88,9 +88,8 @@ def build_graph(points):
     :return: a planar graph constructed from the given vertices
     """
     lines = create_lines(points)
-    point_distances = create_distance_list(lines)
-
-    return point_distances
+    point_distances = create_distance_list(lines, len(points))
+    point_distances = point_distances  # TODO use point_distances
 
 
 def create_lines(points):
