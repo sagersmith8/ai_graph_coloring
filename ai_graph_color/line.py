@@ -36,6 +36,7 @@ class Line:
         for routine, params in self.deallocation_routines:
             routine(*params)
 
+
 def point_distance(point_a, point_b):
     """
     Compute the euclidean distance between two points.
