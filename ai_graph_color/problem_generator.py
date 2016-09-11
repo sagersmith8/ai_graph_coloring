@@ -1,6 +1,10 @@
 """
 This file will generate a random planer graph
 """
+from itertools import combinations
+from line import Line
+from llist import dllist
+
 import os
 import random
 import sys
@@ -83,9 +87,28 @@ def build_graph(points):
     :rtype: graph (adjacency list)
     :return: a planar graph constructed from the given vertices
     """
-    pass
+    point_distances = [[] for _ in range(len(points))]
+    lines = {}
 
+    for point_a, point_b in combinations(enumerate(points), 2):
+        connecting_line = Line(point_a[1], point_b[1])
+        lines[set([point_a[0], point_b[0]])] = connecting_line
 
+        point_distances[point_a[0]].insert( (point_b[0], connecting_line) )
+        point_distances[point_b[0]].insert( (point_a[0], connecting_line) )
+
+    for index, distance_list in enumerate(point_distances):
+        point_distances[index] = dllist(sorted(distance_list, key = lambda x: x[1].distance))
+
+        cur_node = point_distances[index].first
+        while cur_node != None:
+            connected_index = cur_node.value[0]
+            lines[set([index, connected_index])].add_reference(
+                dllist.remove, point_distances[index], cur_node
+            )
+            cur_node = cur_node.next
+
+        
 def scatter_points(num_points, seed=None):
     """
     Generates a specified number of random 2d points in the rectangle from
