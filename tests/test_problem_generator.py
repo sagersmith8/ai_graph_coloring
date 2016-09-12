@@ -1,6 +1,7 @@
 import unittest
 
 from ai_graph_color import problem_generator
+from ai_graph_color import line
 
 
 class TestProblemGenerator(unittest.TestCase):
@@ -70,3 +71,28 @@ class TestProblemGenerator(unittest.TestCase):
                 num_point,
                 len(problem_generator.scatter_points(num_point))
             )
+
+    def test_create_lines(self):
+        """
+        Tests certain properties hold for the lines-map on sample points:
+        - The points indexed by a line's key are the same as the points
+          listed in the line
+        - The distance calculated in a mapped line matches the distance
+          between the points indexed by that line's key
+        - The line can be freed without exception
+        """
+        points = [(0.0, 0.0), (0.0, 3.0), (1.0, 1.0), (1.0, 5.0)]
+        lines = problem_generator.create_lines(points)
+
+        for pair, connecting_line in lines.items():
+            distance = line.point_distance(
+                *tuple(map(lambda i: points[i], pair))
+            )
+
+            self.assertAlmostEqual(connecting_line.distance, distance)
+            self.assertEqual(
+                frozenset(map(lambda i: points[i], pair)),
+                frozenset([connecting_line.left_point,
+                           connecting_line.right_point])
+            )
+            connecting_line.free()  # should not raise any errors
