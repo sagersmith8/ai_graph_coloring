@@ -4,6 +4,8 @@ python:
 # command to install dependencies
 install: "pip install -r requirements-dev.txt"
 # command to run tests
+notifications:
+  slack: msucompsci:AuVt8PyAyo1MT00Ksk7rDhzA
 script:
  - nosetests tests
  - flake8 .
