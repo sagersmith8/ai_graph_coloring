@@ -1,7 +1,6 @@
 import unittest
 
-from ai_graph_color import problem_generator
-from ai_graph_color import line
+from ai_graph_color import line, problem_generator
 
 
 class TestProblemGenerator(unittest.TestCase):
