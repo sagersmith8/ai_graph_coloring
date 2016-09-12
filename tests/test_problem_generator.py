@@ -85,10 +85,10 @@ class TestProblemGenerator(unittest.TestCase):
 
         for pair, connecting_line in lines.items():
             distance = line.point_distance(
-                *tuple(map(lambda i: points[i], pair))
+                *map(lambda i: points[i], pair)
             )
 
-            self.assertAlmostEqual(connecting_line.distance, distance)
+            self.assertAlmostEqual(distance, connecting_line.distance)
             self.assertEqual(
                 frozenset(map(lambda i: points[i], pair)),
                 frozenset([connecting_line.left_point,
