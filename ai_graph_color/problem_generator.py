@@ -125,7 +125,7 @@ def create_distance_list(lines, num_points):
     :rtype: list[dllist(tuple(int, Line))]
     """
     point_distances = [[] for _ in xrange(num_points)]
-    for point_pair, connecting_line in lines.items():
+    for point_pair, connecting_line in lines.iteritems():
         if len(point_pair) != 2:
             raise Exception(
                 ("Expected set indexes into set-line-map to have exactly 2 "
