@@ -5,11 +5,16 @@ import os
 import random
 import sys
 import json
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def write_graph_to_file(out_file, graph):
     """
-    Writes the given graph to the specified file
+    Writes the given graph to the specified file.
+    If the file already exists it deletes it.
+    If the path doesn't exist it creates it.
 
     :param out_file: Location of the outfile
     :type out_file: str
@@ -19,6 +24,13 @@ def write_graph_to_file(out_file, graph):
     :return: Nothing, but a file is written
     """
     out_file = generate_file_path(out_file)
+    if not os.path.exists(os.path.dirname(out_file)):
+        try:
+            os.makedirs(os.path.dirname(out_file))
+        except OSError as exc:
+            log.error(exc)
+    elif os.path.exists(out_file):
+        os.remove(out_file)
     with open(out_file, 'w') as out_file:
         json.dump(graph, out_file, encoding='utf8')
 

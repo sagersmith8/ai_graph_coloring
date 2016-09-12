@@ -7,6 +7,5 @@ install: "pip install -r requirements-dev.txt"
 notifications:
   slack: msucompsci:AuVt8PyAyo1MT00Ksk7rDhzA
 script:
- - mkdir problems
  - nosetests tests
  - flake8 .
