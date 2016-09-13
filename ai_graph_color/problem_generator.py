@@ -1,6 +1,10 @@
 """
 This file will generate a random planer graph
 """
+from itertools import combinations
+from line import Line
+from llist import dllist
+
 import os
 import random
 import sys
@@ -95,7 +99,69 @@ def build_graph(points):
     :rtype: graph (adjacency list)
     :return: a planar graph constructed from the given vertices
     """
-    pass
+    lines = create_lines(points)
+    point_distances = create_distance_list(lines, len(points))
+    point_distances = point_distances  # TODO use point_distances
+
+
+def create_lines(points):
+    """
+    Generate a map of all the possible lines between points, indexed by an
+    immutable set of the indexes of the two points connected by the line
+
+    :param points: the points to create lines from
+    :type points: list[tuple(float, float)]
+    :return: the map of lines
+    :rtype: map<frozenset(int), Line>
+    """
+    lines = {}
+    for point_a, point_b in combinations(enumerate(points), 2):
+        connecting_line = Line(point_a[1], point_b[1])
+        key = frozenset([point_a[0], point_b[0]])
+        lines[key] = connecting_line
+
+        connecting_line.add_reference(dict.pop, lines, key)
+    return lines
+
+
+def create_distance_list(lines, num_points):
+    """
+    Generate a list of doubly-linked lists ordering the given lines by
+    increasing distance from the point at the current index.
+
+    :param lines: the map of lines
+    :type lines: map<frozenset(int), Line>
+    :param num_points: the number of points being connected
+    :type num_points: int
+    :return: the distance list
+    :rtype: list[dllist(tuple(int, Line))]
+    """
+    point_distances = [[] for _ in xrange(num_points)]
+    for point_pair, connecting_line in lines.iteritems():
+        if len(point_pair) != 2:
+            raise Exception(
+                ("Expected set indexes into set-line-map to have exactly 2 "
+                 "point indexes")
+            )
+
+        point_a, point_b = tuple(point_pair)
+
+        point_distances[point_a].append((point_b, connecting_line))
+        point_distances[point_b].append((point_a, connecting_line))
+
+    for index, distance_list in enumerate(point_distances):
+        point_distances[index] = dllist(
+            sorted(distance_list, key=lambda x: x[1].distance)
+        )
+
+        cur_node = point_distances[index].first
+        while cur_node is not None:
+            connected_index = cur_node.value[0]
+            lines[frozenset([index, connected_index])].add_reference(
+                dllist.remove, point_distances[index], cur_node
+            )
+            cur_node = cur_node.next
+    return point_distances
 
 
 def scatter_points(num_points, seed=None):
