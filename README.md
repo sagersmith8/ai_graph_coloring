@@ -16,12 +16,11 @@ Artificial intelligence project to color graphs
     $ pip install virtualenv
 
 #### Creating a virtual environment
-
-    $ virtualenv <path>
+    $ virtualenv venv
     
 #### Activating your virtual environment
 
-    $ source <path>/bin/activate
+    $ source venv/bin/activate
     
 #### Installing requirements
 
