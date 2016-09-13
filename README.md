@@ -6,8 +6,8 @@ Artificial intelligence project to color graphs
 
 ### Requirements
 
-python 2.7
-unix style operating system
+- python 2.7
+- unix style operating system
 
 ### Environment Setup
 
@@ -30,6 +30,8 @@ unix style operating system
 2. `$ pip install requirements-dev.txt`
 
 #### Adding a git hook
+
+This will make git run tests before you make a commit
 
 From the root directory of your project:
 
