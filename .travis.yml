@@ -8,3 +8,5 @@ notifications:
   slack: msucompsci:AuVt8PyAyo1MT00Ksk7rDhzA
 script:
  - ./run-tests.sh
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
