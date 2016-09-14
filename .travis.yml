@@ -3,10 +3,12 @@ python:
   - "2.7"
 # command to install dependencies
 install: "pip install -r requirements-dev.txt"
-# command to run tests
+# slack notifications
 notifications:
   slack: msucompsci:AuVt8PyAyo1MT00Ksk7rDhzA
+# command to run tests
 script:
  - ./run-tests.sh
+ # command to run code coverage
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov
