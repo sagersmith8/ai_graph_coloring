@@ -9,7 +9,4 @@ notifications:
 # command to run tests
 script:
  - ./run-tests.sh
- # command to run code coverage
-after_success:
-  - codecov
-  - bash <(curl -s https://codecov.io/bash)
+ - codecov
