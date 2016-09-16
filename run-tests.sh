@@ -2,4 +2,4 @@
 set -ex
 
 flake8 ai_graph_color tests
-nosetests tests
+nosetests --with-coverage tests

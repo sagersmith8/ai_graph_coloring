@@ -84,7 +84,7 @@ class TestLineObject(unittest.TestCase):
         line.add_reference(max)
         self.assertEqual(deallocation_routines, line.deallocation_routines)
 
-    def free(self):
+    def test_free(self):
         """
         Tests that free calls the proper function
         """
@@ -94,11 +94,11 @@ class TestLineObject(unittest.TestCase):
             point, point
         )
 
-        expected = 10
-        dictionary = {0: expected}
-
-        line.add_reference(dictionary.get, 0)
-        self.assertEqual(expected, line.free())
+        test = [0]
+        self.assertEqual(1, len(test))
+        line.add_reference(test.pop, 0)
+        line.free()
+        self.assertEqual(0, len(test))
 
 
 class TestLine(unittest.TestCase):
