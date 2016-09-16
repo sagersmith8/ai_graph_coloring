@@ -34,6 +34,7 @@ class Line:
         :return: Nothing
         """
         for routine, params in self.deallocation_routines:
+            print routine, params
             routine(*params)
 
 
