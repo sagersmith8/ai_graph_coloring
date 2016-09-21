@@ -39,10 +39,16 @@ class TestProblemGenerator(unittest.TestCase):
         """
         num_verts = [0, 5, 100]
         for num_vert in num_verts:
-            # This will need to change when generate graph is finished
-            self.assertIsNone(
-                problem_generator.generate_graph(num_vert)
+            graph = problem_generator.generate_graph(num_vert)
+            self.assertEquals(
+                num_vert,
+                len(graph)
             )
+            for connections in graph:
+                self.assertGreater(
+                    len(connections),
+                    0
+                )
 
     def test_build_graph(self):
         """
@@ -56,9 +62,16 @@ class TestProblemGenerator(unittest.TestCase):
 
         # This will need to change once build_graph is implemented
         for point in points:
-            self.assertIsNone(
-                problem_generator.build_graph(point)
+            graph = problem_generator.build_graph(point)
+            self.assertEquals(
+                len(point),
+                len(graph)
             )
+            for connections in graph:
+                self.assertGreater(
+                    len(connections),
+                    0
+                )
 
     def test_scatter_points(self):
         """
