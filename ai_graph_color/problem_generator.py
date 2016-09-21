@@ -1,5 +1,5 @@
 """
-This file will generate a random planer graph
+This file will generate a random planar graph
 """
 from itertools import combinations
 from line import Line
@@ -101,7 +101,19 @@ def build_graph(points):
     """
     lines = create_lines(points)
     point_distances = create_distance_list(lines, len(points))
-    point_distances = point_distances  # TODO use point_distances
+
+    graph = [[] for _ in range(len(points))]
+
+    while len(lines) > 0:
+        from_point, to_point, random_line = pick_random_closest(
+            point_distances
+        )
+
+        connect(graph, from_point, to_point)
+        remove_conflicting_lines(lines, random_line)
+
+        random_line.free()
+    return graph
 
 
 def create_lines(points):
@@ -184,6 +196,64 @@ def scatter_points(num_points, seed=None):
         (random.random(), random.random()) for _ in range(num_points)
     ]
 
+
+def pick_random_closest(point_distances):
+    """
+    Picks a random unconnected point and returns the closest connection
+    from that point that doesn't interesect any other connections.
+
+    :param point_distances: the distance list for the set of points
+    :type point_distances: list[dllist(tuple(int, Line))]
+    :rtype tuple(integer, integer, Line)
+    :return the closest connection to a random point
+    """
+    available_points = [
+        index for index, connections in enumerate(point_distances)
+        if len(connections) > 0
+    ]
+
+    random_point = random.choice(available_points)
+    connections = point_distances[random_point]
+
+    connection = connections.first.value
+
+    return random_point, connection[0], connection[1]
+
+
+def connect(graph, from_index, to_index):
+    """
+    Connects the two indices in the graph
+
+    :param graph: the graph to connect
+    :type graph: list[list[integer]]
+    :param from_index: one of the indices
+    :type from_index: integer
+    :param from_index: the other index
+    :type from_index: integer
+    :return: Nothing, but adds two connections to the graph
+    """
+    graph[from_index].append(to_index)
+    graph[to_index].append(from_index)
+
+
+def remove_conflicting_lines(lines, selected_line):
+    """
+    Frees any lines that conflict with a selected line from the
+    data structures that reference them.
+
+    :param lines: the remaining lines
+    :type lines: map<frozenset(int), Line>
+    :param selected_line: the line to check conflicts against
+    :type selected_line: Line
+    :return: Nothing, but removes any conflicting lines from lines
+    """
+    conflicting_lines = []
+    for line in lines.itervalues():
+        if line.intersects(selected_line):
+            conflicting_lines.append(line)
+
+    for conflicting_line in conflicting_lines:
+        conflicting_line.free()
 
 if __name__ == '__main__':
     args = sys.argv[1:]
