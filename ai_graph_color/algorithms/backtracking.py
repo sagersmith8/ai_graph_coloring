@@ -12,12 +12,10 @@ def run(setup, problem, *params):
     :return: the list of colorings for this graph
     """
     len_problem = 0
-    for adj_list in problem:
-        len_problem += len(adj_list)
-    return backtrack({}, problem, len_problem, 0, params[0])
+    return backtrack({}, problem, 0, params[0])
 
 
-def backtrack(final_color, problem, len_problem, cur_node, num_colors):
+def backtrack(final_color, problem, cur_node, num_colors):
     """
     Performs the backtracking algorithm
 
@@ -25,8 +23,6 @@ def backtrack(final_color, problem, len_problem, cur_node, num_colors):
     :type final_color: dict
     :param problem: graph to color
     :type problem: list[list]
-    :param len_problem: number of nodes to color
-    :type len_problem: int
     :param cur_node: index of current node to color
     :type cur_node: int
     :param num_colors: number of colors to use
@@ -42,10 +38,10 @@ def backtrack(final_color, problem, len_problem, cur_node, num_colors):
     available_colors = available_colors.difference(used_colors)
     for color in available_colors:
         final_color[cur_node] = color
-        if len(final_color) == len_problem:
+        if len(final_color) == len(problem):
             yield final_color
         yield (
             backtrack(
-                final_color, problem, len_problem, cur_node+1, num_colors
+                final_color, problem, cur_node+1, num_colors
             )
         )
