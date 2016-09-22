@@ -1,9 +1,10 @@
 import random
 
+
 def run(graph, params, setup):
     num_colors = params['colors']
     colors = range(num_colors)
-    
+
     coloring = [random.choice(colors) for _ in graph]
     num_conflicts = num_conflicts_graph(graph, coloring)
 
@@ -14,7 +15,7 @@ def run(graph, params, setup):
         initial_color = coloring[index]
         min_conflicts = initial_conflicts
         min_conflicts_value = initial_color
-        
+
         for color in colors:
             if color != initial_color:
                 coloring[index] = color
@@ -29,16 +30,17 @@ def run(graph, params, setup):
 
     return coloring
 
+
 def num_conflicts_graph(graph, coloring):
     conflicts = 0
     for from_index, connections in enumerate(graph):
         for to_index in connections:
             if coloring[to_index] == coloring[from_index]:
                 conflicts += 1
-    conflicts /= 2 # each connection is counted twice
+    conflicts /= 2  # each connection is counted twice
     return conflicts
 
-    
+
 def num_conflicts_node(graph, index, coloring):
     conflicts = 0
     for to_index in graph[index]:
