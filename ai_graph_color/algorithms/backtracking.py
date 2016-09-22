@@ -11,7 +11,6 @@ def run(setup, problem, *params):
     :rtype: list[int] the list of coloring
     :return: the list of colorings for this graph
     """
-    len_problem = 0
     return backtrack({}, problem, 0, params[0])
 
 
