@@ -1,3 +1,7 @@
+"""
+Run final graph coloring experiments for all of the algorithms.
+"""
+
 import glob
 import json
 import os
@@ -17,11 +21,13 @@ param_sets = [({'colors': i}, '{}.colors'.format(i)) for i in [3, 4]]
 
 
 for problem_path in glob.iglob('problems/*'):
-    problem_name = os.path.splitext(os.path.split(problem_path)[1])[0]
+    problem_path = os.path.split(problem_path)[1]
+    problem_name = os.path.splitext(problem_path)[0]
     for param_set, param_name in param_sets:
         with open(
-            'results/{}_{}.json'.format(problem_name, param_name)
+            'results/{}_{}.json'.format(problem_name, param_name), 'w'
         ) as output_file:
+            print problem_path
             problem = problem_generator.read_graph_from_file(problem_path)
             json.dump(experiment.iterative(
                 map(
@@ -29,7 +35,6 @@ for problem_path in glob.iglob('problems/*'):
                     algorithm_modules
                 ),
                 problem,
-                param_set,
                 iteration_func,
                 local_limit,
                 global_limit
