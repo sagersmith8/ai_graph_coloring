@@ -29,7 +29,7 @@ def backtrack(final_color, problem, cur_node, num_colors):
     :return: the dictionary of correctly colored nodes if it exists
     """
     used_colors = set()
-    available_colors = set(i for i in xrange(num_colors))
+    available_colors = set(xrange(num_colors))
     for node in problem[cur_node]:
         cur_color = final_color.get(node)
         if cur_color:
