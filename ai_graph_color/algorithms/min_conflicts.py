@@ -19,13 +19,26 @@ def run(graph, setup, params):
     num_colors = params['colors']
 
     colors = range(num_colors)
+    setup.logger.debug(
+        'Trying to color min-conflicts with %s colors', num_colors
+    )
+
     coloring = [random.choice(colors) for _ in graph]
+    setup.logger.debug('Initial coloring: %s', coloring)
+
     num_conflicts = num_conflicts_graph(graph, coloring)
+    setup.logger.debug('Initial conflicts: %s', num_conflicts)
+
+    if setup.counter.increment():
+        yield num_conflicts
 
     while num_conflicts > 0:
         index = random.randint(0, len(graph) - 1)
+        setup.logger.debug('Selected node: %s', index)
 
         initial_conflicts = num_conflicts_node(graph, index, coloring)
+        if setup.counter.increment():
+            yield num_conflicts
         initial_color = coloring[index]
         min_conflicts = initial_conflicts
         min_conflicts_value = initial_color
@@ -37,14 +50,18 @@ def run(graph, setup, params):
             coloring[index] = color
 
             conflicts = num_conflicts_node(graph, index, coloring)
+            if setup.counter.increment():
+                yield num_conflicts
             if conflicts < min_conflicts:
                 min_conflicts = conflicts
                 min_conflicts_value = color
 
         coloring[index] = min_conflicts_value
+        setup.logger.debug('Updated coloring: %s', coloring)
         num_conflicts -= initial_conflicts - min_conflicts
+        setup.logger.debug('Updated conflicts: %s', num_conflicts)
 
-    return coloring
+    yield num_conflicts
 
 
 def num_conflicts_graph(graph, coloring):
