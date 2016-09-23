@@ -29,11 +29,6 @@ def backtracking_search(graph, num_colors):
 
     iteration = 0
     while True:
-        print (
-            'iteration_num: {} stack :{}'.format(
-                iteration, stack
-            )
-        )
         if len(stack) == 0 or complete(coloring, graph):
             return coloring
         cur_node = stack[len(stack)-1][1]
