@@ -31,7 +31,8 @@ class LimitedAlgorithm:
 
     def next_output(self):
         """
-        Get the next intermediate output from the algorithm, or its final output (if it is done).
+        Get the next intermediate output from the algorithm, or its
+        final output if it is done.
         """
         try:
             output = self.runner.next()
