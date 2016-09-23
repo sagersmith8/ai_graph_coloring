@@ -198,4 +198,6 @@ if __name__ == '__main__':
     from ai_graph_color import setup
     generated_problem = problem_generator.generate_graph(100)
     print generated_problem
-    print run(generated_problem, setup.TestRun('test.txt'), {'colors': 4}).next()
+    print (
+        run(generated_problem, setup.TestRun('test.txt'), {'colors': 4}).next()
+    )
