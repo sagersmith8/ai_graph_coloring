@@ -6,7 +6,7 @@ class Counter:
         self.limit = None
         self.counter = 0
 
-    def increment(self):
-        self.counter += 1
+    def increment(self, amt=1):
+        self.counter += amt
 
         return self.limit is not None and self.counter >= self.limit
