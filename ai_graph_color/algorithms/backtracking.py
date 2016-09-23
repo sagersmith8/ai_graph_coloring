@@ -79,8 +79,8 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
     :type avail_colors: set{int}
     :param num_colors: the number of colors to color with
     :type num_colors: int
-    :rtype: bool
-    :return: True if it picks the next node and False if it doesn't
+    :rtype: None
+    :return: None
     """
     next_node = (
         min_remaining_var(coloring, graph)
@@ -88,7 +88,7 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
 
     while next_node is None:
         if len(stack) == 0:
-            return False
+            return
         stack.pop()
         next_node = (
             min_remaining_var(coloring, graph)
@@ -107,8 +107,6 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
                 chosen_color
             ]
         )
-        return True
-    return False
 
 
 def min_color_conflicts(avail_colors, graph, cur_node, num_color):
