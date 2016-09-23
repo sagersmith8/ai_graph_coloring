@@ -1,0 +1,6 @@
+Finished, final coloring: {18: 3}
+About to add to stack..
+Current  stack: [[{18: 3}, 18, set([0, 1]), 3]]
+Added to stack..
+Current  stack: [[{18: 3}, 18, set([0, 1]), 3], [{18: 3}, 81, set([0, 1]), 2]]
+Finished, final coloring: {81: 2, 18: 3}

@@ -114,13 +114,20 @@ def choose_next_node(
         chosen_color = min_color_conflicts(
             avail_colors[next_node], graph, next_node, num_colors
         )
-
+        avail_colors[next_node] -= {chosen_color}
+        for node in graph[next_node]:
+            avail_colors[node] -= {chosen_color}
         nodes_to_check = [(node, next_node) for node in graph[next_node]]
         while len(nodes_to_check) > 0:
             node, prev_node = nodes_to_check.pop(0)
+            print avail_colors[node], avail_colors[prev_node]
             if len(avail_colors[prev_node]) == 1:
+                print 'here'
                 coloring[prev_node] = list(avail_colors[prev_node])[0]
                 avail_colors[node] -= coloring[prev_node]
+                for node_check in graph[node]:
+                    if node_check != prev_node:
+                        avail_colors[node_check] -= {coloring[prev_node]}
                 if setup:
                     setup.logger.debug('Doing the MAC case')
                     setup.logger.debug(
@@ -253,4 +260,4 @@ if __name__ == '__main__':
     from ai_graph_color import setup
     generated_problem = problem_generator.generate_graph(100)
     print generated_problem
-    print run(generated_problem, setup.Evaluation(), {'colors': 4}).next()
+    print run(generated_problem, setup.TestRun('test.txt'), {'colors': 4}).next()

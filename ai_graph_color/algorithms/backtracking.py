@@ -28,6 +28,7 @@ def run(graph, setup, params):
             yield coloring
         cur_node = stack[len(stack)-1][1]
         coloring[cur_node] = stack[len(stack)-1][3]
+        avail_colors[cur_node] -= {coloring[cur_node]}
         if setup is not None:
             setup.logger.debug(
                 'Coloring node:{} color{}'.format(
@@ -107,7 +108,7 @@ def choose_next_node(
         )
 
     chosen_color = min_color_conflicts(
-        avail_colors[next_node], graph, next_node, num_colors
+        avail_colors, graph, next_node, num_colors
     )
 
     if len(avail_colors[next_node]) > 0:
@@ -144,7 +145,7 @@ def min_color_conflicts(avail_colors, graph, cur_node, num_color):
     all_colors = set(range(num_color))
     for node in graph[cur_node]:
         available_colors = (
-            avail_colors-(all_colors - avail_colors)
+            avail_colors[cur_node]-(all_colors - avail_colors[node])
         )
         for color in available_colors:
             available_color_count[color][0] += 1
@@ -184,7 +185,7 @@ def min_remaining_var(coloring, graph):
         if coloring.get(index) is not None:
             continue
         for node in adj_list:
-            if coloring.get(node) is not None:
+            if coloring.get(node) is None:
                 colored_neighbors.add(coloring.get(node))
         num_neighbors_colored.append(
             (len(colored_neighbors), len(adj_list), index)
@@ -197,4 +198,4 @@ if __name__ == '__main__':
     from ai_graph_color import setup
     generated_problem = problem_generator.generate_graph(100)
     print generated_problem
-    print run(generated_problem, setup.Evaluation(), {'colors': 4}).next()
+    print run(generated_problem, setup.TestRun('test.txt'), {'colors': 4}).next()
