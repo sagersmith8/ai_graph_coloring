@@ -219,5 +219,5 @@ if __name__ == '__main__':
     generated_problem = problem_generator.generate_graph(100)
     print generated_problem
     print (
-        run(generated_problem, setup.TestRun('test.txt'), {'colors': 4}).next()
+        run(generated_problem, setup.Evaluation(), {'colors': 4}).next()
     )
