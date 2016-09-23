@@ -41,7 +41,9 @@ def run(graph, setup, params):
                 )
                 yield coloring
 
-        choose_next_node(stack, coloring, graph, avail_colors, num_colors)
+        choose_next_node(
+            stack, coloring, graph, avail_colors, num_colors, setup
+        )
 
 
 def init(graph, num_colors):
