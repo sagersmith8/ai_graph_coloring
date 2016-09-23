@@ -1,21 +1,21 @@
-"""
-Color a graph using min-conflicts:
-
-First generate a random coloring for the graph.
-Until there are no conflicts in the graph,
-    choose a random node in the graph, and change it to have the color
-    which reduces the number of conflicts in the graph the most.
-
-:param colors: the number of colors to color the graph with
-:type colors: int
-"""
-
 import random
 
 params = {}
 
 
 def run(graph, setup, params):
+    """
+    Color a graph using min-conflicts:
+
+    First generate a random coloring for the graph.
+    Until there are no conflicts in the graph,
+        choose a random node in the graph, and change it to have the color
+        which reduces the number of conflicts in the graph the most.
+
+    :param colors: the number of colors to color the graph with
+    :type colors: int
+    """
+
     num_colors = params['colors']
 
     colors = range(num_colors)
