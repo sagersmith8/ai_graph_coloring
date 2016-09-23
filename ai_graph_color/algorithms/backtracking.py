@@ -16,10 +16,14 @@ def run(setup, problem, *params):
 
 def backtracking_search(graph, num_colors):
     """
+    Searches the graph using backtracking
 
-    :param problem:
-    :param num_colors:
-    :return:
+    :param problem: The graph to color
+    :type problem: list[list[int]]
+    :param num_colors: number of colors to try and color with
+    :type num_colors: int
+    :rtype: dict
+    :return: the colored graph
     """
     coloring, avail_colors, stack = init(graph, num_colors)
 
@@ -40,6 +44,15 @@ def backtracking_search(graph, num_colors):
 
 
 def init(graph, num_colors):
+    """
+    Initializes the backtracking algorithm
+    :param graph: graph to color
+    :type graph: list[list[int]]
+    :param num_colors: the number of colors to color with
+    :type num_colors: int
+    :rtype: tuple
+    :return: the inital states of coloring, avail_colors, and stack
+    """
     avail_colors = []
     for _ in xrange(len(graph)):
         avail_colors.append(set(xrange(num_colors)))
@@ -55,13 +68,20 @@ def init(graph, num_colors):
 
 def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
     """
+    Chooses the next node and its coloring and adds it to the stack
 
-    :param stack:
-    :param coloring:
-    :param graph:
-    :param avail_colors:
-    :param num_colors:
-    :return:
+    :param stack: the current stack of the program
+    :type stack: list[dict{int:int}, int, set{int}, int}]
+    :param coloring: the current coloring of the program
+    :type coloring: dict{int:int}
+    :param graph: the current graph to color
+    :type graph: list[list[int]]
+    :param avail_colors: the available colors to color with
+    :type avail_colors: set{int}
+    :param num_colors: the number of colors to color with
+    :type num_colors: int
+    :rtype: bool
+    :return: True if it picks the next node and False if it doesn't
     """
     next_node = (
         min_remaining_var(coloring, graph)
@@ -79,9 +99,6 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
         avail_colors[next_node], graph, next_node, num_colors
     )
 
-    for node in graph[next_node]:
-        avail_colors[node] -= {chosen_color}
-
     if len(avail_colors[next_node]) > 0:
         stack.append(
             [
@@ -98,6 +115,7 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
 def min_color_conflicts(avail_colors, graph, cur_node, num_color):
     """
     Returns the color with the least number of conflicts
+
     :param graph: the graph to color
     :type graph: [(int, {int})]
     :param cur_node: index of the not you are attempting to color
@@ -136,6 +154,7 @@ def min_remaining_var(coloring, graph):
     """
     Finds the minimum remaining variable in the graph
        - The node connected to the most nodes with colors
+
     :param coloring: list of chosen colors
     :type coloring: dict{int : int}
     :param graph: graph to color
