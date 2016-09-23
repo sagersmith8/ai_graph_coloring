@@ -102,7 +102,11 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
             if len(avail_colors[node]) == 1:
                 coloring[node] = list(avail_colors[node])[0]
                 avail_colors[node] -= coloring[prev_node]
-                nodes_to_check.extend((temp_node, node) for temp_node in graph[node] if temp_node != prev_node)
+                nodes_to_check.extend(
+                    (temp_node, node)
+                    for temp_node in graph[node]
+                    if temp_node != prev_node
+                )
             elif avail_colors[node] == 0:
                 keep_choosing = True
                 break

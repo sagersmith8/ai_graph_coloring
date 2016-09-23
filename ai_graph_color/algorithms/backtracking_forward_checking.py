@@ -129,7 +129,6 @@ def min_color_conflicts(avail_colors, graph, cur_node, num_color):
         available_colors = (
             avail_colors-(all_colors - avail_colors)
         )
-        #coloring[]
         for color in available_colors:
             available_color_count[color][0] += 1
     return max(available_color_count)[1]
