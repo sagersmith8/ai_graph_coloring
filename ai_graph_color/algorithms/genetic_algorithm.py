@@ -39,7 +39,8 @@ def generate_initial_population(graph, population_size, num_colors):
     return population
 
 
-def tournament_selection(population, tournament_size, children_per_generation):
+def tournament_selection(population, tournament_size,
+                         children_per_generation, setup):
     """
     Determines the parents for crossover via tournament selection
 
@@ -56,14 +57,18 @@ def tournament_selection(population, tournament_size, children_per_generation):
     :rtype: list[tuple(int,list[int])]
     """
     winners = []
-    for _ in range(children_per_generation):
+    for i in range(children_per_generation):
         tournament = random.sample(population, tournament_size)
-        winners.append(max(tournament, key=lambda i: i[0]))
+        winners.append(min(tournament, key=lambda i: i[0]))
+        setup.logger.debug('Holding tournament %s, picked winner ' +
+                           'with fitness %s out of a max fitness of %s.',
+                           i, min(tournament, key=lambda i: i[0]),
+                           best_fitness(population))
 
     return winners
 
 
-def crossover(graph, parents, children_per_generation, crossover_rate):
+def crossover(graph, parents, children_per_generation, crossover_rate, setup):
     """
     Mixes the genome of 2 parents to create 2 children
 
@@ -98,6 +103,8 @@ def crossover(graph, parents, children_per_generation, crossover_rate):
                         crossover_area.add(neighbor)
                         to_visit.append(neighbor)
 
+        setup.logger.debug('Performing crossover, crossover area: %s',
+                           crossover_area)
         children.extend([
             (None, [
                 (parent_pair[p][1][i] if i in crossover_area
@@ -109,7 +116,7 @@ def crossover(graph, parents, children_per_generation, crossover_rate):
     return children
 
 
-def mutation(population, mutation_rate, num_colors):
+def mutation(population, mutation_rate, num_colors, setup):
     """
     Randomly mutate the state of a given node based on
         the given mutation rate
@@ -130,9 +137,13 @@ def mutation(population, mutation_rate, num_colors):
     for index, solution in enumerate(solutions):
         for node in solution:
             if random.random() <= mutation_rate:
-                population[index][1][node] = new_color(
+                mutated = new_color(
                     population[index][1][node], num_colors
                 )
+                setup.logger.debug('Mutated a %s to a %s',
+                                   population[index][1][node],
+                                   mutated)
+                population[index][1][node] = mutated
                 population[index] = (None, population[index][1])
     return population
 
@@ -202,6 +213,7 @@ def best_fitness(population):
 def calculate_fitness(solution, graph):
     """
     Determines the fitness of a potential solution in the population
+    (where smaller fitness is better).
 
     :param solution: a potential solution
     :type: tuple(int, list[int])
@@ -212,6 +224,15 @@ def calculate_fitness(solution, graph):
     :rtype: int
     """
 
+    return penalty(solution, graph)
+
+
+def penalty(solution, graph):
+    """
+    Calculates the penalty that should be given to a given solution.
+    This is just the number of conflicting (matching color) edges
+    in the given solution.
+    """
     conflicts = 0
 
     for node, adj_list in enumerate(graph):
@@ -279,24 +300,19 @@ def run(graph, setup, params):
         yield best_fitness(population)
 
     while(not stopping_condition(population)):
-        setup.logger.debug('Holding %s tournaments, of size %s.',
-                           children_per_generation, tournament_size)
         parents = tournament_selection(
-            population, tournament_size, children_per_generation
+            population, tournament_size, children_per_generation, setup
         )
 
         children = crossover(
-            graph, parents, children_per_generation, crossover_rate
+            graph, parents, children_per_generation, crossover_rate, setup
         )
-        setup.logger.debug('Created children from tournament winners,' +
-                           ' replacing %s worst of population with children',
-                           children_per_generation)
         population = replacement(population, children)
-        population = mutation(population, mutation_rate, num_colors)
-        setup.logger.debug('Mutated population, reevaluating fitness')
+        population = mutation(population, mutation_rate, num_colors, setup)
         num_evaluations = evaluate_population(population, graph, setup)
         setup.logger.debug('Current best fitness: %s',
                            best_fitness(population))
 
         if setup.counter.increment(num_evaluations):
             yield best_fitness(population)
+    yield 0  # yield the best fitness (0) if it terminates
