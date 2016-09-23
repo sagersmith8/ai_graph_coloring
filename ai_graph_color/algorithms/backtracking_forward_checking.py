@@ -45,7 +45,9 @@ def backtracking_search(graph, num_colors, setup=None):
                 setup.logger.debug("Didn't finish, final coloring: {}"
                                    .format(coloring))
                 yield coloring
-        choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup)
+        choose_next_node(
+            stack, coloring, graph, avail_colors, num_colors, setup
+        )
         iteration += 1
 
 
@@ -72,7 +74,8 @@ def init(graph, num_colors):
     )
 
 
-def choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup=None):
+def choose_next_node(
+        stack, coloring, graph, avail_colors, num_colors, setup=None):
     """
     Chooses the next node and its coloring and adds it to the stack
 
@@ -223,4 +226,5 @@ def min_remaining_var(coloring, graph):
 if __name__ == '__main__':
     from ai_graph_color import problem_generator
     generated_problem = problem_generator.generate_graph(100)
-    print generated_problem, '\n', backtracking_search(generated_problem, 4).next()
+    print generated_problem
+    print backtracking_search(generated_problem, 4).next()

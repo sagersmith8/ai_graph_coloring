@@ -40,7 +40,9 @@ def backtracking_search(graph, num_colors, setup=None):
         coloring[cur_node] = stack[len(stack)-1][3]
         if setup is not None:
             setup.logger.debug(
-                'Coloring node:{} color{}'.format(cur_node, stack[len(stack) - 1][3])
+                'Coloring node:{} color{}'.format(
+                    cur_node, stack[len(stack) - 1][3]
+                )
             )
             if setup.counter.imcrement():
                 setup.logger.debug(
@@ -74,7 +76,8 @@ def init(graph, num_colors):
     )
 
 
-def choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup=None):
+def choose_next_node(
+        stack, coloring, graph, avail_colors, num_colors, setup=None):
     """
     Chooses the next node and its coloring and adds it to the stack
 
@@ -202,4 +205,5 @@ def min_remaining_var(coloring, graph):
 if __name__ == '__main__':
     from ai_graph_color import problem_generator
     generated_problem = problem_generator.generate_graph(100)
-    print generated_problem, '\n', backtracking_search(generated_problem, 4).next()
+    print generated_problem
+    print backtracking_search(generated_problem, 4).next()

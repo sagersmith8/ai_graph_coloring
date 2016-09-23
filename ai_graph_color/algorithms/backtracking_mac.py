@@ -48,7 +48,9 @@ def backtracking_search(graph, num_colors, setup=None):
             setup.logger.debug(
                 'Finished, final coloring: {}'.format(coloring)
             )
-        choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup)
+        choose_next_node(
+            stack, coloring, graph, avail_colors, num_colors, setup
+        )
 
 
 def init(graph, num_colors):
@@ -74,7 +76,8 @@ def init(graph, num_colors):
     )
 
 
-def choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup=None):
+def choose_next_node(
+        stack, coloring, graph, avail_colors, num_colors, setup=None):
     """
     Chooses the next node and its coloring and adds it to the stack
 
@@ -132,8 +135,8 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup=Non
                     setup.logger.debug('Doing the MAC case')
                     setup.logger.debug(
                         """
-                        Removing color : {} from node: {}'s color choices because
-                        it is node: {}'s  only color choice
+                        Removing color : {} from node: {}'s color choices
+                        because it is node: {}'s  only color choice
                         """.format(coloring[prev_node], node, prev_node)
                     )
                 if setup:
@@ -151,7 +154,10 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup=Non
             elif avail_colors[node] == 0:
                 if setup:
                     setup.logger.debug(
-                        "MAC found a coloring that won't work, trying new coloring"
+                        """
+                        MAC found a coloring that won't work,
+                        trying new coloring
+                        """
                     )
                 keep_choosing = True
                 break
@@ -255,4 +261,5 @@ def min_remaining_var(coloring, graph):
 if __name__ == '__main__':
     from ai_graph_color import problem_generator
     generated_problem = problem_generator.generate_graph(100)
-    print generated_problem, '\n', backtracking_search(generated_problem, 4).next()
+    print generated_problem
+    print backtracking_search(generated_problem, 4).next()
