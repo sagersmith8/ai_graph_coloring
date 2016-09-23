@@ -35,9 +35,9 @@ def num_conflicts_graph(graph, coloring):
     conflicts = 0
     for from_index, connections in enumerate(graph):
         for to_index in connections:
-            if coloring[to_index] == coloring[from_index]:
+            if (from_index < to_index and
+                    coloring[to_index] == coloring[from_index]):
                 conflicts += 1
-    conflicts /= 2  # each connection is counted twice
     return conflicts
 
 
