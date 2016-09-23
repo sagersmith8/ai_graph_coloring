@@ -1,4 +1,5 @@
-import runner, problem_generator
+import problem_generator
+import runner
 from algorithms import backtracking
 from algorithms import backtracking_mac
 from algorithms import backtracking_forward_checking
