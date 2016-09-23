@@ -1,3 +1,11 @@
+"""
+A simple test algorithm that solves the problem of trying to find a
+number close to a particular number.
+
+Looks for integer the range of [0, multiplier*problem +1], and
+only keeps the one that is closest to the problem number.
+"""
+
 import random
 
 params = {'multiplier': 3}

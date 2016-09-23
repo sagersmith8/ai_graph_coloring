@@ -1,4 +1,7 @@
 class Counter:
+    """
+    Counts up to a limit, and signals if that limit is reached.
+    """
     def __init__(self):
         self.limit = None
         self.counter = 0
