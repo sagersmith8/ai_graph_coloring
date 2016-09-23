@@ -4,12 +4,12 @@ from algorithm import LimitedAlgorithm
 
 def iterative(algorithms, problem, iteration_func, local_limit,
               global_limit=None):
-    algorithm_runners = map(
-        lambda m: LimitedAlgorithm(
-            m[0], problem, setup.Evaluation(), m[1]
-        ),
-        algorithms
-    )
+    algorithm_runners = [
+        LimitedAlgorithm(
+            algorithm, problem, setup.Evaluation(), params
+        )
+        for algorithm, params in algorithms
+    ]
 
     iteration_values = []
     iterations = 0
@@ -19,14 +19,16 @@ def iterative(algorithms, problem, iteration_func, local_limit,
 
     while (not (last_completion is not None and
                 iteration_num - last_completion > local_limit) and
-           not (global_limit is not None and iterations > global_limit)):
+           not (global_limit is not None and iterations > global_limit) and
+           (len(completed_algorithms) < len(algorithm_runners))):
         iterations = iteration_func(iteration_num)
         iteration_values.append(iterations)
 
         for index, runner in enumerate(algorithm_runners):
             runner.set_limit(iterations)
+            runner.next_output()
 
-            if (runner.next_output() is None and
+            if (runner.setup.counter.counter < iterations and
                     index not in completed_algorithms):
                 completed_algorithms.add(index)
                 last_completion = iteration_num
@@ -35,5 +37,8 @@ def iterative(algorithms, problem, iteration_func, local_limit,
 
     return {
         'iterations': iteration_values,
-        'history': [runner.output_history for runner in algorithm_runners]
+        'history': [
+            (runner.output_history, runner.setup.counter.counter)
+            for runner in algorithm_runners
+        ]
     }
