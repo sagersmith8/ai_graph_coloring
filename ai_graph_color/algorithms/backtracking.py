@@ -41,7 +41,9 @@ def run(graph, setup, params):
                 )
                 yield coloring
 
-        choose_next_node(stack, coloring, graph, avail_colors, num_colors)
+        choose_next_node(
+            stack, coloring, graph, avail_colors, num_colors, setup
+        )
 
 
 def init(graph, num_colors):
@@ -199,5 +201,5 @@ if __name__ == '__main__':
     generated_problem = problem_generator.generate_graph(100)
     print generated_problem
     print (
-        run(generated_problem, setup.Evaluation(), {'colors': 4}).next()
+        run(generated_problem, setup.TestRun('test.txt'), {'colors': 4}).next()
     )
