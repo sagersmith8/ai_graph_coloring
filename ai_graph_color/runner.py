@@ -6,7 +6,7 @@ def evaluate(algorithm, problem, params=None, iteration_limit=None):
     """
     Execute an algorithm module with an evaluation setup.
     """
-    execute(
+    return execute(
         algorithm,
         problem,
         setup.Evaluation(),
@@ -20,7 +20,7 @@ def test_run(algorithm, problem, test_run_path, params=None,
     """
     Execute an algorithm module with an test run setup.
     """
-    execute(
+    return execute(
         algorithm,
         problem,
         setup.TestRun(test_run_path),

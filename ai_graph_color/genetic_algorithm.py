@@ -211,6 +211,7 @@ def calculate_fitness(solution, graph):
     :return: number of conflicts
     :rtype: int
     """
+
     conflicts = 0
 
     for node, adj_list in enumerate(graph):
@@ -221,7 +222,7 @@ def calculate_fitness(solution, graph):
     return conflicts
 
 
-def evaluate_population(population, graph):
+def evaluate_population(population, graph, setup):
     """
     Determines the fitness of every potential solution in the population
 
@@ -230,9 +231,13 @@ def evaluate_population(population, graph):
     :param graph: the adjacency list of nodes to be colored
     :type: list[list[int]]
     """
+    num_evaluations = 0
     for index, (fitness, coloring) in enumerate(population):
         if fitness is None:
             population[index] = (calculate_fitness(coloring, graph), coloring)
+            num_evaluations += 1
+
+    return num_evaluations
 
 
 def run(graph, setup, params):
@@ -268,16 +273,30 @@ def run(graph, setup, params):
     population = generate_initial_population(
         graph, population_size, num_colors
     )
-    evaluate_population(population, graph)
+    setup.logger.debug('Initializing population of size: %s', population_size)
+    num_evaluations = evaluate_population(population, graph, setup)
+    if setup.counter.increment(num_evaluations):
+        yield best_fitness(population)
 
     while(not stopping_condition(population)):
+        setup.logger.debug('Holding %s tournaments, of size %s.',
+                           children_per_generation, tournament_size)
         parents = tournament_selection(
             population, tournament_size, children_per_generation
         )
+
         children = crossover(
             graph, parents, children_per_generation, crossover_rate
         )
+        setup.logger.debug('Created children from tournament winners,' +
+                           ' replacing %s worst of population with children',
+                           children_per_generation)
         population = replacement(population, children)
         population = mutation(population, mutation_rate, num_colors)
-        evaluate_population(population, graph)
-        print best_fitness(population)
+        setup.logger.debug('Mutated population, reevaluating fitness')
+        num_evaluations = evaluate_population(population, graph, setup)
+        setup.logger.debug('Current best fitness: %s',
+                           best_fitness(population))
+
+        if setup.counter.increment(num_evaluations):
+            yield best_fitness(population)
