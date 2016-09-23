@@ -1,4 +1,4 @@
-def run(setup, problem, *params):
+def run(problem, setup, *params):
     """
     This will execute the algorithm
 
@@ -14,10 +14,12 @@ def run(setup, problem, *params):
     return backtracking_search(problem, params[0])
 
 
-def backtracking_search(graph, num_colors):
+def backtracking_search(graph, num_colors, setup=None):
     """
     Searches the graph using backtracking
 
+    :param setup: the setup for this algorithm
+    :type setup: Setup
     :param problem: The graph to color
     :type problem: list[list[int]]
     :param num_colors: number of colors to try and color with
@@ -27,14 +29,26 @@ def backtracking_search(graph, num_colors):
     """
     coloring, avail_colors, stack = init(graph, num_colors)
 
-    iteration = 0
     while True:
         if len(stack) == 0 or complete(coloring, graph):
-            return coloring
+            if setup:
+                setup.logger.debug(
+                    'Finished, final coloring: {}'.format(coloring)
+                )
+            yield coloring
         cur_node = stack[len(stack)-1][1]
         coloring[cur_node] = stack[len(stack)-1][3]
-        choose_next_node(stack, coloring, graph, avail_colors, num_colors)
-        iteration += 1
+        if setup:
+            if setup.counter.increment():
+                if setup:
+                    setup.logger.debug(
+                        "Didn't finish, final coloring: {}".format(coloring)
+                    )
+                yield coloring
+            setup.logger.debug(
+                'Finished, final coloring: {}'.format(coloring)
+            )
+        choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup)
 
 
 def init(graph, num_colors):
@@ -60,10 +74,12 @@ def init(graph, num_colors):
     )
 
 
-def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
+def choose_next_node(stack, coloring, graph, avail_colors, num_colors, setup=None):
     """
     Chooses the next node and its coloring and adds it to the stack
 
+    :param setup: the setup with the counter and the logger
+    :type setup: Setup
     :param stack: the current stack of the program
     :type stack: list[dict{int:int}, int, set{int}, int}]
     :param coloring: the current coloring of the program
@@ -86,8 +102,18 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
 
         while next_node is None:
             if len(stack) == 0:
+                if setup:
+                    setup.logger.debug('Stack is empty')
                 return
+            if setup:
+                setup.logger.debug('About to backtrack..')
+                setup.logger.debug('Current stack is {}'
+                                   .format(stack))
             stack.pop()
+            if setup:
+                setup.logger.debug('Just backtracked..')
+                setup.logger.debug('Current stack is {}'
+                                   .format(stack))
             next_node = (
                 min_remaining_var(coloring, graph)
             )
@@ -99,19 +125,41 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
         nodes_to_check = [(node, next_node) for node in graph[next_node]]
         while len(nodes_to_check) > 0:
             node, prev_node = nodes_to_check.pop(0)
-            if len(avail_colors[node]) == 1:
-                coloring[node] = list(avail_colors[node])[0]
+            if len(avail_colors[prev_node]) == 1:
+                coloring[prev_node] = list(avail_colors[prev_node])[0]
                 avail_colors[node] -= coloring[prev_node]
+                if setup:
+                    setup.logger.debug('Doing the MAC case')
+                    setup.logger.debug(
+                        """
+                        Removing color : {} from node: {}'s color choices because
+                        it is node: {}'s  only color choice
+                        """.format(coloring[prev_node], node, prev_node)
+                    )
+                if setup:
+                    setup.logger.debug('About to add to MAC queue..')
+                    setup.logger.debug('Cur queue: {}'.format(nodes_to_check))
                 nodes_to_check.extend(
                     (temp_node, node)
                     for temp_node in graph[node]
                     if temp_node != prev_node
                 )
+
+                if setup:
+                    setup.logger.debug("Added to MAC queue..")
+                    setup.logger.debug('Cur queue: {}'.format(nodes_to_check))
             elif avail_colors[node] == 0:
+                if setup:
+                    setup.logger.debug(
+                        "MAC found a coloring that won't work, trying new coloring"
+                    )
                 keep_choosing = True
                 break
 
     if len(avail_colors[next_node]) > 0:
+        if setup:
+            setup.logger.debug('About to add to stack..')
+            setup.logger.debug('Current  stack: {}'.format(stack))
         stack.append(
             [
                 coloring,
@@ -120,10 +168,23 @@ def choose_next_node(stack, coloring, graph, avail_colors, num_colors):
                 chosen_color
             ]
         )
+        if setup:
+            setup.logger.debug('Added to stack..')
+            setup.logger.debug('Current  stack: {}'.format(stack))
 
     else:
+        if setup:
+            setup.logger.debug('About to backtrack..')
+            setup.logger.debug('Current  stack: {}'.format(stack))
         coloring[next_node] = chosen_color
         stack.pop()
+        if setup:
+            if setup.counter.increment():
+                setup.logger.debug("Didn't finish, final coloring: {}"
+                                   .format(coloring))
+                # Todo yield coloring, it breaks the function for somereason
+            setup.logger.debug('Just backtracked..')
+            setup.logger.debug('Current  stack: {}'.format(stack))
 
 
 def min_color_conflicts(avail_colors, graph, cur_node, num_color):
@@ -194,4 +255,4 @@ def min_remaining_var(coloring, graph):
 if __name__ == '__main__':
     from ai_graph_color import problem_generator
     generated_problem = problem_generator.generate_graph(100)
-    print generated_problem, '\n', backtracking_search(generated_problem, 4)
+    print generated_problem, '\n', backtracking_search(generated_problem, 4).next()
