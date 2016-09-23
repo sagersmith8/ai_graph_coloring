@@ -1,4 +1,6 @@
 params = {}  # default params
+
+
 # :param 'colors': the number of colors to use for colorings
 # :type 'colors': int
 
@@ -26,8 +28,8 @@ def run(graph, setup, params):
                     'Finished, final coloring: {}'.format(coloring)
                 )
             yield coloring
-        cur_node = stack[len(stack)-1][1]
-        coloring[cur_node] = stack[len(stack)-1][3]
+        cur_node = stack[len(stack) - 1][1]
+        coloring[cur_node] = stack[len(stack) - 1][3]
         if setup:
             if setup.counter.increment():
                 if setup:
@@ -112,22 +114,16 @@ def choose_next_node(
             )
 
         chosen_color = min_color_conflicts(
-            avail_colors[next_node], graph, next_node, num_colors
+            avail_colors, graph, next_node, num_colors
         )
+
         avail_colors[next_node] -= {chosen_color}
-        for node in graph[next_node]:
-            avail_colors[node] -= {chosen_color}
         nodes_to_check = [(node, next_node) for node in graph[next_node]]
         while len(nodes_to_check) > 0:
             node, prev_node = nodes_to_check.pop(0)
-            print avail_colors[node], avail_colors[prev_node]
             if len(avail_colors[prev_node]) == 1:
-                print 'here'
                 coloring[prev_node] = list(avail_colors[prev_node])[0]
                 avail_colors[node] -= coloring[prev_node]
-                for node_check in graph[node]:
-                    if node_check != prev_node:
-                        avail_colors[node_check] -= {coloring[prev_node]}
                 if setup:
                     setup.logger.debug('Doing the MAC case')
                     setup.logger.debug(
@@ -207,10 +203,10 @@ def min_color_conflicts(avail_colors, graph, cur_node, num_color):
     all_colors = set(range(num_color))
     for node in graph[cur_node]:
         available_colors = (
-            avail_colors-(all_colors - avail_colors)
+            avail_colors[node] - (all_colors - avail_colors[cur_node])
         )
         for color in available_colors:
-            available_color_count[color][0] += 1
+            available_color_count[color][0] = 1
     return max(available_color_count)[1]
 
 
@@ -258,6 +254,7 @@ def min_remaining_var(coloring, graph):
 if __name__ == '__main__':
     from ai_graph_color import problem_generator
     from ai_graph_color import setup
+
     generated_problem = problem_generator.generate_graph(100)
     print generated_problem
     print (
