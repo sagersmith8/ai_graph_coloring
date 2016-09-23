@@ -22,5 +22,5 @@ for algorithm in algorithms:
         problem,
         'testruns/{}.txt'.format(algorithm.__name__.split('.')[-1]),
         {'colors': 4},
-        10000
+        1000
     )

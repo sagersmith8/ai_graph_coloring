@@ -16,6 +16,13 @@ def run(graph, setup, params):
     :rtype: dict
     :return: the colored graph
     """
+    setup.logger.debug(
+        ('Running "backtracking with forward checking"'
+         'with params: %s on graph: %s'),
+        params,
+        graph
+    )
+
     num_colors = params['colors']
     coloring, avail_colors, stack = init(graph, num_colors)
 
