@@ -38,8 +38,7 @@ def backtracking_search(graph, num_colors):
             return coloring
         cur_node = stack[len(stack)-1][1]
         coloring[cur_node] = stack[len(stack)-1][3]
-        if not choose_next_node(stack, coloring, graph, avail_colors, num_colors):
-            return coloring
+        choose_next_node(stack, coloring, graph, avail_colors, num_colors)
         iteration += 1
 
 
