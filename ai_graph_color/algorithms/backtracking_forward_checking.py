@@ -105,7 +105,7 @@ def choose_next_node(
         )
 
     chosen_color = min_color_conflicts(
-        avail_colors[next_node], graph, next_node, num_colors
+        avail_colors, graph, next_node, num_colors
     )
 
     if setup:
@@ -165,7 +165,7 @@ def min_color_conflicts(avail_colors, graph, cur_node, num_color):
     all_colors = set(range(num_color))
     for node in graph[cur_node]:
         available_colors = (
-            avail_colors-(all_colors - avail_colors)
+            avail_colors[cur_node]-(all_colors - avail_colors[node])
         )
         for color in available_colors:
             available_color_count[color][0] += 1
