@@ -1,0 +1,26 @@
+Coloring node:23 color3
+Coloring node:16 color2
+Coloring node:11 color2
+Coloring node:20 color1
+Coloring node:2 color2
+Coloring node:24 color1
+Coloring node:21 color3
+Coloring node:22 color3
+Coloring node:17 color3
+Coloring node:13 color2
+Coloring node:12 color1
+Coloring node:9 color0
+Coloring node:8 color3
+Coloring node:3 color0
+Coloring node:19 color1
+Coloring node:15 color1
+Coloring node:10 color1
+Coloring node:14 color0
+Coloring node:7 color1
+Coloring node:6 color0
+Coloring node:1 color0
+Coloring node:18 color3
+Coloring node:5 color0
+Coloring node:4 color0
+Coloring node:0 color0
+Finished, final coloring:{0: 0, 1: 0, 2: 2, 3: 0, 4: 0, 5: 0, 6: 0, 7: 1, 8: 3, 9: 0, 10: 1, 11: 2, 12: 1, 13: 2, 14: 0, 15: 1, 16: 2, 17: 3, 18: 3, 19: 1, 20: 1, 21: 3, 22: 3, 23: 3, 24: 1}
