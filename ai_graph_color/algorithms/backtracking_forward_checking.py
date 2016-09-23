@@ -1,20 +1,9 @@
-def run(problem, setup, *params):
-    """
-    This will execute the algorithm
-
-    :param setup: the setup for this algorithm
-    :type setup: :class: ~ai_graph_color.Setup
-    :param problem: the graph to color
-    :type problem: the graph to color
-    :param params: the params for this algorithm
-    :type params: tuple
-    :rtype: list[int] the list of coloring
-    :return: the list of colorings for this graph
-    """
-    return backtracking_search(problem, params[0], setup)
+params = {}  # default params
+# :param 'colors': the number of colors to use for colorings
+# :type 'colors': int
 
 
-def backtracking_search(graph, num_colors, setup=None):
+def run(graph, setup, params):
     """
     Searches the graph using backtracking
 
@@ -27,6 +16,7 @@ def backtracking_search(graph, num_colors, setup=None):
     :rtype: dict
     :return: the colored graph
     """
+    num_colors = params['colors']
     coloring, avail_colors, stack = init(graph, num_colors)
 
     iteration = 0
@@ -40,9 +30,9 @@ def backtracking_search(graph, num_colors, setup=None):
         coloring[cur_node] = stack[len(stack)-1][3]
         if setup:
             setup.logger.debug('Made decision to color node: {} color: {}'
-                               .format(cur_node, stack[len(stack)-1[3]]))
+                               .format(cur_node, stack[len(stack)-1][3]))
             if setup.counter.increment():
-                setup.logger.debug("Didn't finish, final coloring: {}"
+                setup.logger.debug("Preempted with coloring:{}"
                                    .format(coloring))
                 yield coloring
         choose_next_node(
@@ -225,6 +215,7 @@ def min_remaining_var(coloring, graph):
 
 if __name__ == '__main__':
     from ai_graph_color import problem_generator
+    from ai_graph_color import setup
     generated_problem = problem_generator.generate_graph(100)
     print generated_problem
-    print backtracking_search(generated_problem, 4).next()
+    print run(generated_problem, setup.Evaluation(), {'colors': 4}).next()

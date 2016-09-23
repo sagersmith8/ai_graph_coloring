@@ -36,7 +36,7 @@ class LimitedAlgorithm:
         """
         try:
             output = self.runner.next()
-        except:
+        except StopIteration:
             output = None
 
         self.output_history.append(output)
