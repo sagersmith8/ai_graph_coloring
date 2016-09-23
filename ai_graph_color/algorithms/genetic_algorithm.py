@@ -202,6 +202,7 @@ def best_fitness(population):
 def calculate_fitness(solution, graph):
     """
     Determines the fitness of a potential solution in the population
+    (where smaller fitness is better).
 
     :param solution: a potential solution
     :type: tuple(int, list[int])
@@ -212,6 +213,15 @@ def calculate_fitness(solution, graph):
     :rtype: int
     """
 
+    return penalty(solution, graph)
+
+
+def penalty(solution, graph):
+    """
+    Calculates the penalty that should be given to a given solution.
+    This is just the number of conflicting (matching color) edges
+    in the given solution.
+    """
     conflicts = 0
 
     for node, adj_list in enumerate(graph):
@@ -300,3 +310,4 @@ def run(graph, setup, params):
 
         if setup.counter.increment(num_evaluations):
             yield best_fitness(population)
+    yield 0  # yield the best fitness (0) if it terminates
