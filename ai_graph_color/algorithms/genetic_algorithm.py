@@ -1,3 +1,4 @@
+
 """
 This file will use a genetic algorithm to solve graph coloring
 """
@@ -6,9 +7,9 @@ import random
 params = {
     'colors': 4,
     'population_size': 1000,
-    'mutation': 0.05,
-    'tournament_size': 20,
-    'children_per_generation': 20,
+    'mutation': 0.125,
+    'tournament_size': 25,
+    'children_per_generation': 250,
     'crossover_rate': 0.25
 }
 
@@ -60,11 +61,10 @@ def tournament_selection(population, tournament_size,
     for i in range(children_per_generation):
         tournament = random.sample(population, tournament_size)
         winners.append(min(tournament, key=lambda i: i[0]))
-        setup.logger.debug('Holding tournament %s, picked winner ' +
-                           'with fitness %s out of a max fitness of %s.',
-                           i, min(tournament, key=lambda i: i[0]),
-                           best_fitness(population))
-
+    setup.logger.debug(
+        'Tournament winners had fitness: %s',
+        [winner[0] for winner in winners]
+    )
     return winners
 
 
@@ -134,17 +134,25 @@ def mutation(population, mutation_rate, num_colors, setup):
     :rtype: list[tuple(int,list[int])]
     """
     solutions = [individual[1] for individual in population]
+    mutations = 0
     for index, solution in enumerate(solutions):
+        node_mutations = 0
         for node in solution:
             if random.random() <= mutation_rate:
+                node_mutations += 1
+
                 mutated = new_color(
                     population[index][1][node], num_colors
                 )
-                setup.logger.debug('Mutated a %s to a %s',
-                                   population[index][1][node],
-                                   mutated)
                 population[index][1][node] = mutated
                 population[index] = (None, population[index][1])
+        mutations += node_mutations
+        if random.randint(0, len(solution)) < node_mutations:
+            setup.logger.debug(
+                'Showing mutated individual %s with %s mutations',
+                solution, node_mutations
+            )
+    setup.logger.debug('Mutated %s genes in the population', mutations)
     return population
 
 
@@ -281,6 +289,12 @@ def run(graph, setup, params):
         - :crossover_rate: likelyhood of a node to be
               part of the crossover area
     """
+    setup.logger.debug(
+        'Running genetic algorithm with params: %s on graph: %s',
+        params,
+        graph
+    )
+
     num_colors = params['colors']
     population_size = params['population_size']
     mutation_rate = params['mutation']
@@ -294,10 +308,12 @@ def run(graph, setup, params):
     population = generate_initial_population(
         graph, population_size, num_colors
     )
-    setup.logger.debug('Initializing population of size: %s', population_size)
+    setup.logger.debug('Initial population: %s', population)
     num_evaluations = evaluate_population(population, graph, setup)
     if setup.counter.increment(num_evaluations):
         yield best_fitness(population)
+
+    generation_num = 0
 
     while(not stopping_condition(population)):
         parents = tournament_selection(
@@ -310,9 +326,20 @@ def run(graph, setup, params):
         population = replacement(population, children)
         population = mutation(population, mutation_rate, num_colors, setup)
         num_evaluations = evaluate_population(population, graph, setup)
-        setup.logger.debug('Current best fitness: %s',
-                           best_fitness(population))
+
+        generation_num += 1
+
+        setup.logger.debug('Current best fitness for generation %s: %s',
+                           generation_num, best_fitness(population))
+
+        if generation_num % 100 == 0:
+            setup.logger.debug('Showing population for generation %s: %s',
+                               generation_num, population)
 
         if setup.counter.increment(num_evaluations):
+            setup.logger.debug('Preempted... Current population: %s',
+                               population)
             yield best_fitness(population)
+
+    setup.logger.debug('Final population: %s', population)
     yield 0  # yield the best fitness (0) if it terminates

@@ -16,12 +16,11 @@ def run(graph, setup, params):
     :type colors: int
     """
 
+    setup.logger.debug('Running min-conflicts with params: %s on graph: %s',
+                       params, graph)
     num_colors = params['colors']
 
     colors = range(num_colors)
-    setup.logger.debug(
-        'Trying to color min-conflicts with %s colors', num_colors
-    )
 
     coloring = [random.choice(colors) for _ in graph]
     setup.logger.debug('Initial coloring: %s', coloring)

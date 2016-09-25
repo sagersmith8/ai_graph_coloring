@@ -16,6 +16,12 @@ def run(graph, setup, params):
     :rtype: dict
     :return: the colored graph
     """
+    setup.logger.debug(
+        'Running backtracking with params: %s on graph: %s',
+        params,
+        graph
+    )
+
     num_colors = params['colors']
     coloring, avail_colors, stack = init(graph, num_colors)
 
@@ -26,6 +32,8 @@ def run(graph, setup, params):
                     "Finished, final coloring:{}".format(coloring)
                 )
             yield coloring
+            return
+        
         cur_node = stack[len(stack)-1][1]
         coloring[cur_node] = stack[len(stack)-1][3]
         avail_colors[cur_node] -= {coloring[cur_node]}
