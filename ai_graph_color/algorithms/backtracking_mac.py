@@ -34,6 +34,7 @@ def run(graph, setup, params):
                     'Finished, final coloring: {}'.format(coloring)
                 )
             yield coloring
+            return
         cur_node = stack[len(stack) - 1][1]
         coloring[cur_node] = stack[len(stack) - 1][3]
         if setup:

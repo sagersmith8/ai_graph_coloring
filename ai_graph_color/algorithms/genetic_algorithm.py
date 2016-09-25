@@ -1,3 +1,4 @@
+
 """
 This file will use a genetic algorithm to solve graph coloring
 """
@@ -6,9 +7,9 @@ import random
 params = {
     'colors': 4,
     'population_size': 1000,
-    'mutation': 0.05,
-    'tournament_size': 20,
-    'children_per_generation': 20,
+    'mutation': 0.125,
+    'tournament_size': 25,
+    'children_per_generation': 250,
     'crossover_rate': 0.25
 }
 

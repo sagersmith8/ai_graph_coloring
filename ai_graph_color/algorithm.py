@@ -25,6 +25,7 @@ class LimitedAlgorithm:
         self.runner = module.run(self.problem, self.setup, self.params)
 
         self.output_history = []
+        self.output_iterations = []
 
     def set_limit(self, limit):
         self.setup.counter.limit = limit
@@ -40,4 +41,5 @@ class LimitedAlgorithm:
             output = None
 
         self.output_history.append(output)
+        self.output_iterations.append(self.setup.counter.counter)
         return output

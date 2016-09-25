@@ -30,9 +30,11 @@ def run(graph, setup, params):
     while True:
         if len(stack) == 0 or complete(coloring, graph):
             if setup:
-                setup.logger.debug("Finished, final coloring: {}"
-                                   .format(coloring))
+                setup.logger.debug(
+                    'Finished, final coloring: {}'.format(coloring)
+                )
             yield coloring
+            return
         cur_node = stack[len(stack)-1][1]
         coloring[cur_node] = stack[len(stack)-1][3]
         if setup:
